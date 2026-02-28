@@ -1,23 +1,31 @@
 ﻿using System;
-namespace eCommerceCartFunctionality
-{
+
+namespace eCommerceCartFunc {
     internal class Program
     {
-        //static string cart = "empty";
-        static string[] userCart = new string[99];
-        static string[] productType = { "Fashion", "Electronics", "Groceries" };
-        static string[] productName = {"Uniqlo Ultra Light Jacket", "Nike Air Max 270", "Samsung Galaxy Watch8 Smartwatch",
-            "HUAWEI MatePad 11.5\" Tablet", "Nescafé Gold Coffee", "Jack N' Jill Cloud 9 Classic Bars"};
-        static int[] productPrice = { 2490, 7000, 21890, 14499, 350, 165 };
-        static int productQuantity = 0;
+        static List<string> userCartProduct = new List<string>();
+        static List<int> productQuantity = new List<int>();
 
+        //!NOTE TO SELF!
+        //UPDATE | 02.21:
+        // > added the basic structure of the program. Still need to work on the adding, removing item and view cart function...
+        //------------------
+        //UPDATE | 02.28:
+        // > removed some features, to avoid myself being overwhelmed and focus on the basic agendas, before moving on with adding more features!
+        // > REMOVE ITEM & VIEW CART Function is not yet available. After adding item -> view cart will be shown automatically.
+        // > cannot calculate the product total price yet in accordance to quantity.
         static void Main(string[] args)
         {
             //TITLE STUFF 
             Console.WriteLine("E-Commerce App  |  CART FUNCTIONALITY\n===============================");
             productList();
-            Console.WriteLine("===============================\n-- SELECT A COMMAND --" + "\nA | Add Item\nB | Remove Item \nC | View Cart");
+            Console.WriteLine("===============================\n-- SELECT A COMMAND --" + "\nA | Add Item\nB | Remove Item \nC | View Cart"); 
             //MAIN BLOCK STUFF
+            cartMenu();
+        }
+
+        static void cartMenu()
+        {
             string userInput;
 
             Console.Write("===============================\nENTER A COMMAND: ");
@@ -28,7 +36,6 @@ namespace eCommerceCartFunctionality
                 case "A":
                 case "a":
                     addItem();
-                    toAddMoreItem();
                     break;
                 case "B":
                 case "b":
@@ -45,35 +52,43 @@ namespace eCommerceCartFunctionality
             }
         }
 
-        static bool toAddMoreItem()
+        static void addItem () 
         {
-            Console.Write("ADD MORE ITEMS? (Y/N): ");
-            string addMoreInput = Console.ReadLine();
+            Console.WriteLine("ADD ITEM TO CART\n===================\n");
+            Console.Write("PRODUCT NAME: ");
+            string productNameInput = Console.ReadLine();
+                userCartProduct.Add(productNameInput);
 
-            bool addMore = false;
+            Console.Write("PRODUCT QUANTITY: ");
+            int productQuantityInput = int.Parse (Console.ReadLine()); //i added int.Parse here to convert the input to an integer, since the product quantity is displaying 49 when entered 1 and etc. I searched to fix this issue!
+            productQuantity.Add(productQuantityInput);
 
-            while (addMore)
+            Console.WriteLine(productNameInput + " ADDED TO CART SUCCESSFULLY!");
+            viewCart();
+        }
+
+        static void removeItem()
+        {
+
+        }
+
+        static void viewCart()
+        {
+            if (userCartProduct != null)
             {
-                switch (addMoreInput)
+                Console.WriteLine("\n===================\nMY CART");
+                Console.WriteLine("PRODUCT NAME  |  QUANTITY");
+                for (int i = 0; i < userCartProduct.Count; i++)
                 {
-                    case "Y":
-                    case "y":
-                        addMore = true;
-                        break;
-                    case "N":
-                    case "n":
-                        addMore = false;
-                        break;
-                    default:
-                        Console.WriteLine("INVALID INPUT. SYSTEM WILL NOW EXIT...");
-                        Environment.Exit(0);
-                        break;
+                    Console.WriteLine($"[{i + 1}] {userCartProduct[i]}   {productQuantity[i]}");
                 }
             }
-
-            return addMore;
+            else
+            {
+                Console.WriteLine("ERROR!\nYOUR CART IS CURRENTLY EMPTY.");
+            }
         }
-        static void productList()
+        private static void productList()
         {
             //Dis is for my reference, Im gon use to add items to the cart
             Console.WriteLine("--- PRODUCTS ---\n=========");
@@ -81,22 +96,4 @@ namespace eCommerceCartFunctionality
             Console.WriteLine("ELECTRONICS\n> Samsung Galaxy Watch8 Smartwatch  |  Php21,890\n> HUAWEI MatePad 11.5\" Tablet  |  Php14,499\n=========");
             Console.WriteLine("GROCERIES\n> Nescafé Gold Coffee   | Php350\n> Jack N' Jill Cloud 9 Classic Bars  |  Php165");
         }
-        static void addItem()
-        {
-            Console.Write("PRODUCT TYPE: ");
-            string productTypeInput = Console.ReadLine();
-            Console.Write("PRODUCT NAME: ");
-            string productNameInput = Console.ReadLine();
-            Console.Write("QUANTITY: ");
-            int productQuantityInput = Console.Read();
-        }
-
-        static void removeItem()
-        {
-        }
-
-        static void viewCart()
-        {
-        }
-    }
-}
+}}
