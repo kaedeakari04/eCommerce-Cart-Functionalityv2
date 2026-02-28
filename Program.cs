@@ -14,6 +14,10 @@ namespace eCommerceCartFunc {
         // > removed some features, to avoid myself being overwhelmed and focus on the basic agendas, before moving on with adding more features!
         // > REMOVE ITEM & VIEW CART Function is not yet available. After adding item -> view cart will be shown automatically.
         // > cannot calculate the product total price yet in accordance to quantity.
+        // ADDED 02.28_v2
+        // > added loop for adding more items
+        // > fixed view cart function
+
         static void Main(string[] args)
         {
             //TITLE STUFF 
@@ -22,27 +26,23 @@ namespace eCommerceCartFunc {
             Console.WriteLine("===============================\n-- SELECT A COMMAND --" + "\nA | Add Item\nB | Remove Item \nC | View Cart"); 
             //MAIN BLOCK STUFF
             cartMenu();
-        }
 
+        }
         static void cartMenu()
         {
             string userInput;
-
             Console.Write("===============================\nENTER A COMMAND: ");
-            userInput = Console.ReadLine();
+            userInput = Console.ReadLine().ToUpper();
             Console.WriteLine();
             switch (userInput)
             {
                 case "A":
-                case "a":
                     addItem();
                     break;
                 case "B":
-                case "b":
                     removeItem();
                     break;
                 case "C":
-                case "c":
                     viewCart();
                     break;
                 default:
@@ -60,21 +60,42 @@ namespace eCommerceCartFunc {
                 userCartProduct.Add(productNameInput);
 
             Console.Write("PRODUCT QUANTITY: ");
-            int productQuantityInput = int.Parse (Console.ReadLine()); //i added int.Parse here to convert the input to an integer, since the product quantity is displaying 49 when entered 1 and etc. I searched to fix this issue!
-            productQuantity.Add(productQuantityInput);
+            int productQuantityInput = int.Parse(Console.ReadLine()); //i added int.Parse here to convert the input to an integer, since the product quantity is displaying 49 when entered 1 and etc. I searched to fix this issue!
+                productQuantity.Add(productQuantityInput);
 
             Console.WriteLine(productNameInput + " ADDED TO CART SUCCESSFULLY!");
-            viewCart();
-        }
+            //LOOP FOR ADDING MOREEE ITEMSSS
+            bool toAddMore = true;
+            while (toAddMore)
+            {
+                Console.Write("\n===================\nWOULD YOU LIKE TO ADD MORE ITEMS? [Y/N]? ");
+                string moreItemInput = Console.ReadLine().ToUpper();
 
+                switch (moreItemInput)
+                {
+                    case "Y":
+                        addItem();
+                        break;
+                    case "N":
+                        viewCart();
+                        Console.WriteLine("\n===================\nTHANK YOU. HAVE A GREAT DAY.");
+                        toAddMore = false;
+                        Environment.Exit(0);
+                        break;
+                    default:
+                        Console.WriteLine("INVALID COMMAND. SYSTEM WILL EXIT...");
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+        }
         static void removeItem()
         {
 
         }
-
         static void viewCart()
         {
-            if (userCartProduct != null)
+            if (userCartProduct.Count > 0)
             {
                 Console.WriteLine("\n===================\nMY CART");
                 Console.WriteLine("PRODUCT NAME  |  QUANTITY");
@@ -86,6 +107,7 @@ namespace eCommerceCartFunc {
             else
             {
                 Console.WriteLine("ERROR!\nYOUR CART IS CURRENTLY EMPTY.");
+                cartMenu();
             }
         }
         private static void productList()
