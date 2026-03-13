@@ -16,9 +16,12 @@ namespace eCommerceCartFunc {
         // > added loop for adding more items
         // > fixed view cart function
         //------------------
+        //UPDATE  |  03.13:
+        // > added maximum cart limit/threshold + checker
+        // > created product code instead of typing the whole product name
 
 
-        static int maxCartCount = 2, productCounter = 0;
+        static int maxCartCount = 2;
         //--------------------
         static List<string> userCartProduct = new List<string>();
         static List<int> productQuantity = new List<int>();

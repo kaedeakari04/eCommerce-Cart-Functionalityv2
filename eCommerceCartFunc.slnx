@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="eCommerceCartFunc.csproj" />
+  <Project Path="eCommerceFunc_AppService/eCommerceFunc_AppService.csproj" Id="3e8bfa22-5534-4429-9f1e-6d1df7468d4b" />
+  <Project Path="eCommerceFunc_DataService/eCommerceFunc_DataService.csproj" Id="80b31d1a-1dde-4563-b7f2-6b01c6eac71b" />
+  <Project Path="eCommerceFunc_Models/eCommerceFunc_Models.csproj" Id="09c27327-4276-45b5-9dee-de8a92891a82" />
 </Solution>
