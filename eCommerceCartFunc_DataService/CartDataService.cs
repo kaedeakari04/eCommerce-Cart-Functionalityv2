@@ -1,15 +1,15 @@
-﻿using System;
+﻿using eCommerceCartFunc_AppService;
+using eCommerceCartFunc_Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using eCommerceCartFunc_Models;
-using eCommerceCartFunc_AppService;
 
 namespace eCommerceCartFunc_DataService
 {
     public class CartDataService
     {
         public List<Product> productList = new List<Product>();
-        public int maxCartCount = 99;
+        public int maxCartCount = 2;
 
         public void AddItem(string productInCode, int productInQuanti)
         {

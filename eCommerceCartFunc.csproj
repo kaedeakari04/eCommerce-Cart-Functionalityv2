@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="eCommerceFunc_AppService\CartAppService.cs" />
+    <Compile Remove="eCommerceFunc_DataService\CartDataService.cs" />
+  </ItemGroup>
+
 </Project>

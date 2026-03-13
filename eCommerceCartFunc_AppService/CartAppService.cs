@@ -1,8 +1,8 @@
-﻿using System;
+﻿using eCommerceCartFunc_DataService;
+using eCommerceCartFunc_Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using eCommerceCartFunc_Models;
-using eCommerceCartFunc_DataService;
 
 
 namespace eCommerceCartFunc_AppService
@@ -14,12 +14,19 @@ namespace eCommerceCartFunc_AppService
         public bool addToCart(string newProductCode, int newProductQuanti)
         {
 
-            if (product.ProductQuantity <= 0)
+
+            if (dataService.productList.Count >= dataService.maxCartCount)
             {
                 return false;
             }
             dataService.AddItem(newProductCode, newProductQuanti);
             return true;
+
+       
+        }
+
+        public List <Product> viewMyCart(){
+            return dataService.viewCart();
         }
     }
 }

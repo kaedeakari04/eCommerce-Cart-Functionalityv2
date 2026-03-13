@@ -1,4 +1,6 @@
 ﻿using System;
+using eCommerceCartFunc_AppService;
+
 
 namespace eCommerceCartFunc {
     internal class Program
@@ -20,23 +22,27 @@ namespace eCommerceCartFunc {
         // > added maximum cart limit/threshold + checker
         // > created product code instead of typing the whole product name
 
-
-        static int maxCartCount = 2;
         //--------------------
-        static List<string> userCartProduct = new List<string>();
-        static List<int> productQuantity = new List<int>();
+        static CartAppService serviceAccess = new CartAppService();
+
         static List<string> fashionProduct = new List<string>();
         static List<string> electronicsProduct = new List<string>();
         static List<string> groceriesProduct = new List<string>();
+
+
    
         static void Main(string[] args)
         {
             //TITLE STUFF 
             Console.WriteLine("E-Commerce App  |  CART FUNCTIONALITY\n===============================");
             productDisplay();
-            Console.WriteLine("===============================\n-- SELECT A COMMAND --" + "\nA | Add Item\nB | Remove Item \nC | View Cart"); 
+
             //MAIN BLOCK STUFF
-            cartMenu();
+            while (true)
+            {
+                Console.WriteLine("===============================\n-- SELECT A COMMAND --" + "\nA | Add Item\nB | Remove Item \nC | View Cart");
+                cartMenu();
+            }
         }
 
         static void cartMenu()
@@ -62,67 +68,23 @@ namespace eCommerceCartFunc {
                     break;
             }
         }
-        static void addItem () 
+        static void addItem()
         {
-            Console.WriteLine("ADD ITEM TO CART\n===================\n");
-            Console.Write("PRODUCT CODE: ");
-            string productNameInput = Console.ReadLine().ToUpper();
+            Console.Write("ENTER PRODUCT CODE: ");
+            string productInput = Console.ReadLine().ToUpper();
+            Console.Write("ENTER " + productInput + " QUANTITY : ");
+            if (int.TryParse(Console.ReadLine(), out int quantityInput)) {
+                bool isSuccessful = serviceAccess.addToCart(productInput, quantityInput);
 
-
-            if ( productNameInput == "FN-1"
-              || productNameInput == "FN-2"
-              || productNameInput == "ET-1"
-              || productNameInput == "ET-2"
-              || productNameInput == "GR-1"
-              || productNameInput == "GR-2") 
-            {
-                userCartProduct.Add(productNameInput);
-                Console.Write("PRODUCT QUANTITY: ");
-                int productQuantityInput = int.Parse(Console.ReadLine()); //i added int.Parse here to convert the input to an integer, since the product quantity is displaying 49 when entered 1 and etc. I searched to fix this issue!
-                productQuantity.Add(productQuantityInput);
-
-                Console.WriteLine(productNameInput + " ADDED TO CART SUCCESSFULLY!");
-
-                if (userCartProduct.Count >= maxCartCount)
+                if (isSuccessful)
                 {
-                    Console.Write("YOUR CART HAS REACHED ITS MAXIMUM LIMIT. PLEASE CHECK-OUT OR REMOVE ITEMS.\n\n");
-                    viewCart();
-                    Environment.Exit(0);
+                    Console.WriteLine(productInput + " IS SUCCESSFULLY ADDED TO CART!");
                 }
-                else 
-                {
-                    //LOOP FOR ADDING MOREEE ITEMSSS
-                    bool toAddMore = true;
-                    while (toAddMore)
-                    {
-                        Console.Write("\n===================\nWOULD YOU LIKE TO ADD MORE ITEMS? [Y/N]? ");
-                        string moreItemInput = Console.ReadLine().ToUpper();
 
-                        switch (moreItemInput)
-                        {
-                            case "Y":
-
-                                addItem();
-                                break;
-                            case "N":
-                                viewCart();
-                                Console.WriteLine("\n===================\nTHANK YOU. HAVE A GREAT DAY.");
-                                toAddMore = false;
-                                Environment.Exit(0);
-                                break;
-                            default:
-                                Console.WriteLine("INVALID COMMAND. SYSTEM WILL EXIT...");
-                                Environment.Exit(0);
-                                break;
-                        }
-                    }
+                else {
+                    Console.WriteLine("ERROR! YOUR CART HAS REACHED ITS MAXIMUM LIMIT");
                 }
-            } else
-            {
-                Console.WriteLine("ERROR! PLEASE ENTER A VALID PRODUCT CODE.\n\n");
-            }
-               
-           
+            } 
         }
         static void removeItem()
         {
@@ -130,19 +92,21 @@ namespace eCommerceCartFunc {
         }
         static void viewCart()
         {
-            if (userCartProduct.Count > 0)
+            Console.WriteLine("\n===================\nMY CART");
+            Console.WriteLine("PRODUCT NAME  |  QUANTITY");
+
+            var cartItems = serviceAccess.viewMyCart();
+
+            if (cartItems.Count == 0 )
             {
-                Console.WriteLine("\n===================\nMY CART");
-                Console.WriteLine("PRODUCT NAME  |  QUANTITY");
-                for (int i = 0; i < userCartProduct.Count; i++)
-                {
-                    Console.WriteLine($"[{i + 1}] {userCartProduct[i]}   {productQuantity[i]}");
-                }
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
             }
             else
             {
-                Console.WriteLine("ERROR! YOUR CART IS CURRENTLY EMPTY.");
-                cartMenu();
+                foreach (var item in cartItems) 
+                {
+                    Console.WriteLine($"[ {item.ProductCode} ]     x {item.ProductQuantity}");
+                }
             }
         }
         private static void productDisplay()
