@@ -5,10 +5,13 @@ using System.Text;
 
 namespace eCommerceCartFunc_DataService_
 {
-    internal class CartDataService
+    public class CartDataService
     {
         ICartDataService dataService;
-        CartDataService(ICartDataService cartDataService)
+
+        public List<Product> productList = new List<Product>();
+        public int maxCartCount = 99;
+        public CartDataService(ICartDataService cartDataService)
         {
             dataService = cartDataService;
         }

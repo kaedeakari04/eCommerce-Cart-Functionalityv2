@@ -9,14 +9,23 @@
 
   <ItemGroup>
     <Compile Remove="eCommerceCartFunc_AppService\**" />
+    <Compile Remove="eCommerceCartFunc_AppService_\**" />
     <Compile Remove="eCommerceCartFunc_DataService\**" />
+    <Compile Remove="eCommerceCartFunc_DataService_\**" />
     <Compile Remove="eCommerceCartFunc_Models\**" />
+    <Compile Remove="eCommerceCartFunc_Models_\**" />
     <EmbeddedResource Remove="eCommerceCartFunc_AppService\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_AppService_\**" />
     <EmbeddedResource Remove="eCommerceCartFunc_DataService\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_DataService_\**" />
     <EmbeddedResource Remove="eCommerceCartFunc_Models\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_Models_\**" />
     <None Remove="eCommerceCartFunc_AppService\**" />
+    <None Remove="eCommerceCartFunc_AppService_\**" />
     <None Remove="eCommerceCartFunc_DataService\**" />
+    <None Remove="eCommerceCartFunc_DataService_\**" />
     <None Remove="eCommerceCartFunc_Models\**" />
+    <None Remove="eCommerceCartFunc_Models_\**" />
   </ItemGroup>
 
   <ItemGroup>

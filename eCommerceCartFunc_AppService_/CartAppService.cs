@@ -9,18 +9,13 @@ namespace eCommerceCartFunc_AppService_
 {
     public class CartAppService
     {
-        ICartDataService dataService = new cart_JSON_Data();
+        CartDataService dataService = new CartDataService(new CartDB());
 
         public CartAppService()
         {
             cart_JSON_Data cartJson = new cart_JSON_Data();
         }
-
-
-        Product product = new Product()
-        {
-            ProductCode = ""
-        }; //this is to prevent errors, since i set this to required!
+       
         public bool addToCart(string newProductCode, int newProductQuanti)
         {
 

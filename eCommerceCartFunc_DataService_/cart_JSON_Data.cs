@@ -12,13 +12,10 @@ namespace eCommerceCartFunc_DataService_
     //NOTES: same file as the Data Service, but the difference is this requires special coding! --> to get JSON file
 
     public List<Product> products = new List<Product>();
-
-    private string JsonFile;
     public int maxCartCount => 99;
+    private string JsonFile;
 
-        public List<Product> productList => products;
-
-        public cart_JSON_Data() {
+    public cart_JSON_Data() {
     JsonFile = $"{AppDomain.CurrentDomain.BaseDirectory}/Products.json";
 
     addToJsonFile();
