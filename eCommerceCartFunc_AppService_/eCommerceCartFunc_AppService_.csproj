@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\eCommerceCartFunc_DataService_\eCommerceCartFunc_DataService_.csproj" />
+    <ProjectReference Include="..\eCommerceCartFunc_Models_\eCommerceCartFunc_Models_.csproj" />
+  </ItemGroup>
+
+</Project>
