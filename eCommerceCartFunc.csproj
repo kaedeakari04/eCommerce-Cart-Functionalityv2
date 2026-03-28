@@ -8,8 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="eCommerceCartFunc_AppService\**" />
+    <Compile Remove="eCommerceCartFunc_DataService\**" />
+    <Compile Remove="eCommerceCartFunc_Models\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_AppService\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_DataService\**" />
+    <EmbeddedResource Remove="eCommerceCartFunc_Models\**" />
+    <None Remove="eCommerceCartFunc_AppService\**" />
+    <None Remove="eCommerceCartFunc_DataService\**" />
+    <None Remove="eCommerceCartFunc_Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="eCommerceFunc_AppService\CartAppService.cs" />
     <Compile Remove="eCommerceFunc_DataService\CartDataService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\eCommerceCartFunc_AppService_\eCommerceCartFunc_AppService_.csproj" />
   </ItemGroup>
 
 </Project>

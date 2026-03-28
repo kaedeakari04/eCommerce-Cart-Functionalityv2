@@ -14,7 +14,6 @@ namespace eCommerceCartFunc_AppService
         public bool addToCart(string newProductCode, int newProductQuanti)
         {
 
-
             if (dataService.productList.Count >= dataService.maxCartCount)
             {
                 return false;

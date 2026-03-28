@@ -1,5 +1,5 @@
 ﻿using System;
-using eCommerceCartFunc_AppService;
+using eCommerceCartFunc_AppService_;
 
 
 namespace eCommerceCartFunc {
@@ -117,11 +117,11 @@ namespace eCommerceCartFunc {
             Console.WriteLine("ELECTRONICS\n> ET-1: Samsung Galaxy Watch8 Smartwatch  |  Php21,890\n> ET-2: HUAWEI MatePad 11.5\" Tablet  |  Php14,499\n=========");
             Console.WriteLine("GROCERIES\n> GR-1: Nescafé Gold Coffee   | Php350\n> GR-2: Jack N' Jill Cloud 9 Classic Bars  |  Php165");
             //
-            fashionProduct.Add("Uniqlo Ultra Light Jacket");
-            fashionProduct.Add("Nike Air Max 270");
-            electronicsProduct.Add("Samsung Galaxy Watch8 Smartwatch");
-            electronicsProduct.Add("HUAWEI MatePad 11.5\" Tablet");
-            groceriesProduct.Add("Nescafé Gold Coffee");
-            groceriesProduct.Add("Jack N' Jill Cloud 9 Classic Bars");
+            //fashionProduct.Add("Uniqlo Ultra Light Jacket");
+            //fashionProduct.Add("Nike Air Max 270");
+            //electronicsProduct.Add("Samsung Galaxy Watch8 Smartwatch");
+            //electronicsProduct.Add("HUAWEI MatePad 11.5\" Tablet");
+            //groceriesProduct.Add("Nescafé Gold Coffee");
+            //groceriesProduct.Add("Jack N' Jill Cloud 9 Classic Bars");
         }
 }}
