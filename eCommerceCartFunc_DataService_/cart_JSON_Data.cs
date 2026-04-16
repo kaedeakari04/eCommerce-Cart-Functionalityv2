@@ -1,16 +1,11 @@
 ﻿using eCommerceCartFunc_Models_;
-using System;
-using System.Collections.Generic;
-using System.Security.Principal;
-using System.Text;
 using System.Text.Json;
 
 namespace eCommerceCartFunc_DataService_
 {
-    public class cart_JSON_Data : ICartDataService
+    public class cart_JSON_Data 
 {
     //NOTES: same file as the Data Service, but the difference is this requires special coding! --> to get JSON file
-
     public List<Product> products = new List<Product>();
     public int maxCartCount => 99;
     private string JsonFile;
@@ -20,7 +15,6 @@ namespace eCommerceCartFunc_DataService_
 
     addToJsonFile();
     }
-
     private void addToJsonFile()
     {
         if (!File.Exists(JsonFile))
@@ -32,7 +26,6 @@ namespace eCommerceCartFunc_DataService_
             retrieveToJsonFile();
         }
     }
-
     private void saveToJsonFile()
     {
         using (var outputStream = File.OpenWrite(JsonFile))
@@ -43,7 +36,6 @@ namespace eCommerceCartFunc_DataService_
                 , products);
         }
     }
-
     private void retrieveToJsonFile()
     {
         using (var jsonFileReader = File.OpenText(JsonFile))
@@ -54,7 +46,6 @@ namespace eCommerceCartFunc_DataService_
                 .ToList();
         }
     }
-
     public void AddItem(string productInCode, int productInQuanti)
     {
             if (products.Count >= maxCartCount)
@@ -64,12 +55,16 @@ namespace eCommerceCartFunc_DataService_
             Product item = new Product
             {
                 ProductCode = productInCode,
-                ProductQuantity = productInQuanti
+                ProductQuantity = productInQuanti,
             };
             products.Add(item);
             saveToJsonFile();
     }
 
+    public void removeItem()
+    {
+
+    }
     public List<Product> viewCart()
     {
         retrieveToJsonFile();

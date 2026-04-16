@@ -1,8 +1,5 @@
 ﻿using eCommerceCartFunc_Models_;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace eCommerceCartFunc_DataService_
 {
@@ -15,10 +12,55 @@ namespace eCommerceCartFunc_DataService_
             sqlToConnect = new SqlConnection(connectString);
 
         }
+        public bool isProductValid(string productInCode)
+        {
+            var products = new List<Product>();
+            var isValidStmt = "SELECT [Product Code], [Product Name], [Product Price], [Category] " +
+                               "FROM ProductsCatalog_TB " +
+                               "WHERE [Product Code] = @ProductCode";
+            using var isValidCmd = new SqlCommand(isValidStmt, sqlToConnect);
+            isValidCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+
+            sqlToConnect.Open();
+            using var toRead = isValidCmd.ExecuteReader();
+
+            Product product = null;
+
+            if (toRead.Read())
+            {
+                product = new Product
+                {
+                    ProductCode = toRead["Product Code"].ToString(),
+                    ProductName = toRead["Product Name"]?.ToString() ?? string.Empty,
+                    ProductPrice = Convert.ToDouble(toRead["Product Price"].ToString()),
+                    Category = toRead["Category"]?.ToString() ?? string.Empty
+                };
+            }
+
+            sqlToConnect.Close();
+            return product != null;
+
+        }
+
+        public int? GetCartCapacity()
+        {
+            var checkStmt = "SELECT SUM([Product Quantity]) FROM CartFunc_TB";
+            using var checkCmd = new SqlCommand(checkStmt, sqlToConnect);
+            
+            sqlToConnect.Open();
+            object totalQuantity = checkCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            if (totalQuantity == DBNull.Value)
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(totalQuantity);
+        }
 
         public void AddItem(string productInCode, int productInQuanti)
         {
-            Console.WriteLine("This is AddItem");
             var insertStmt = "INSERT INTO CartFunc_TB ([Product Code], [Product Quantity]) VALUES (@ProductCode, @ProductQuantity)";
             using var insertCmd = new SqlCommand(insertStmt, sqlToConnect);
 
@@ -51,5 +93,4 @@ namespace eCommerceCartFunc_DataService_
             sqlToConnect.Close();
             return products;
         }
-    }
-}
+}}
