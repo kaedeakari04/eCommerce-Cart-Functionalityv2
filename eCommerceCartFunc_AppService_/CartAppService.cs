@@ -18,9 +18,11 @@ namespace eCommerceCartFunc_AppService_
         }
         public bool addToCart(string newProductCode, int newProductQuanti)
         {
-
-            isProductValid(newProductCode);
             int? cartCapacity = dataService.GetCartCapacity();
+            if (newProductQuanti <= 0)
+            {
+                return false;
+            }
             if (newProductQuanti >= dataService.maxCartCount)
             {
                 return false;
@@ -30,22 +32,41 @@ namespace eCommerceCartFunc_AppService_
                 return false;
             }
 
-            dataService.AddItem(newProductCode, newProductQuanti);
+            isProductExist(newProductCode, newProductQuanti);
             return true;
         }
 
         public bool isProductValid(string newProductCode)
         {
-            if (!dataService.isProductValid(newProductCode))
+            return dataService.isProductValid(newProductCode);
+        }
+        public bool isProductExist(string newProductCode, int newProductQuantity)
+        {
+            if (dataService.isProductExist(newProductCode, newProductQuantity))
             {
-                return false;
+                dataService.updateQuantity(newProductCode, newProductQuantity);
+            }
+            else
+            {
+                dataService.AddItem(newProductCode, newProductQuantity);
             }
             return true;
         }
 
-        public bool removeFromCart(string productCode)
+        public bool isInCart(string newProductCode, int newProductQuantity)
         {
-            return true;
+            if (!dataService.isProductExist(newProductCode, newProductQuantity))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public void removeItem(string newProductCode)
+        {
+            dataService.RemoveItem(newProductCode);
         }
         public List<Product> viewMyCart()
         {

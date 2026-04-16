@@ -13,7 +13,10 @@ namespace eCommerceCartFunc_DataService_
         {
             dataService = cartDataService;
         }
-
+        public bool isProductExist(string productInCode, int productInQuanti)
+        {
+            return dataService.isProductExist(productInCode, productInQuanti);
+        }
         public bool isProductValid(string productInCode)
         {
             return dataService.isProductValid(productInCode);
@@ -22,16 +25,19 @@ namespace eCommerceCartFunc_DataService_
         {
             return dataService.GetCartCapacity();
         }
-
+        public void updateQuantity(string productInCode, int productInQuanti)
+        {
+            dataService.updateQuantity(productInCode, productInQuanti);
+        }
         public void AddItem(string productInCode, int productInQuanti)
         {
             dataService.AddItem(productInCode, productInQuanti);
         }
 
-        //public void removeItem()
-        //{
-
-        //}
+        public void RemoveItem(string productIncode)
+        {
+            dataService.RemoveItem(productIncode);
+        }
 
         public List<Product> viewCart()
         {

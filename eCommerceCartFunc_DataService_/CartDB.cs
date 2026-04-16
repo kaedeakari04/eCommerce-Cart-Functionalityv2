@@ -1,5 +1,6 @@
 ﻿using eCommerceCartFunc_Models_;
 using Microsoft.Data.SqlClient;
+using System.Xml.Serialization;
 
 namespace eCommerceCartFunc_DataService_
 {
@@ -11,6 +12,35 @@ namespace eCommerceCartFunc_DataService_
         {
             sqlToConnect = new SqlConnection(connectString);
 
+        }
+        public bool isProductExist(string productInCode, int productInQuanti)
+        {
+            var products = new List<Product>();
+            var isExistStmt = "SELECT COUNT(*) FROM CartFunc_TB " +
+                              "WHERE [Product Code] = @ProductCode";
+            using var isExistCmd = new SqlCommand(isExistStmt, sqlToConnect);
+            isExistCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+
+            sqlToConnect.Open();
+            int IsProductExist = Convert.ToInt32(isExistCmd.ExecuteScalar());
+            sqlToConnect.Close();
+
+            return IsProductExist>0;
+        }
+
+        public void updateQuantity (string productInCode, int productInQuanti)
+        {
+            var updateQuantiStmt = "UPDATE CartFunc_TB " +
+                                       "SET [Product Quantity] = [Product Quantity] + @ProductQuantity " +
+                                       "WHERE [Product Code] = @ProductCode";
+            using var updateQuantiCmd = new SqlCommand(updateQuantiStmt, sqlToConnect);
+
+            updateQuantiCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+            updateQuantiCmd.Parameters.AddWithValue("@ProductQuantity", productInQuanti);
+
+            sqlToConnect.Open();
+            updateQuantiCmd.ExecuteNonQuery();
+            sqlToConnect.Close();
         }
         public bool isProductValid(string productInCode)
         {
@@ -61,15 +91,28 @@ namespace eCommerceCartFunc_DataService_
 
         public void AddItem(string productInCode, int productInQuanti)
         {
-            var insertStmt = "INSERT INTO CartFunc_TB ([Product Code], [Product Quantity]) VALUES (@ProductCode, @ProductQuantity)";
+            var insertStmt = "INSERT INTO CartFunc_TB ([Product Code], [Product Quantity]) " +
+                             "VALUES (@ProductCode, @ProductQuantity)";
             using var insertCmd = new SqlCommand(insertStmt, sqlToConnect);
 
             insertCmd.Parameters.AddWithValue("@ProductCode", productInCode);
             insertCmd.Parameters.AddWithValue("@ProductQuantity", productInQuanti);
+
             sqlToConnect.Open();
             insertCmd.ExecuteNonQuery();
             sqlToConnect.Close();
+        }
 
+        public void RemoveItem(string productIncode)
+        {
+            var deleteStmt = "DELETE FROM CartFunc_TB " +
+                             "WHERE [Product Code] = @ProductCode";
+            using var deleteCmd = new SqlCommand(deleteStmt, sqlToConnect);
+            deleteCmd.Parameters.AddWithValue("@ProductCode", productIncode);
+
+            sqlToConnect.Open();
+            deleteCmd.ExecuteNonQuery();
+            sqlToConnect.Close();
         }
         public List<Product> viewCart()
         {

@@ -1,5 +1,8 @@
-﻿using System;
-using eCommerceCartFunc_AppService_;
+﻿using eCommerceCartFunc_AppService_;
+using System;
+using System.Collections;
+using System.Dynamic;
+using System.Reflection;
 
 namespace eCommerceCartFunc {
     internal class Program
@@ -39,6 +42,12 @@ namespace eCommerceCartFunc {
         //UPDATE | 04.16
         // > Added and completed validations for AddItem() - cart capacity & checking if item is valid
         // > Created new table for Products Catalog in the database - for checking if current item exists/valid
+        // > Removed Project References of DL and Models from UI Layer(corrected)
+        // > added the display function on BL for displaying product lists accordingly, instead of directly calling DL from UI
+        // > fixed loop in addItem
+        // > added new validation for accepting quantity and incrementing quantity if item already exists in DB table
+        // > added remove specific item function | validations: [1] checks if valid product [2] checks if in cart
+        // > added "confirm remove" feature in removeItem
 
         static CartAppService serviceAccess = new CartAppService();
         static string productInput;
@@ -92,19 +101,20 @@ namespace eCommerceCartFunc {
         }
         static void addItem()
         {
-            Console.Write("ENTER PRODUCT CODE: ");
+            while (true)
+            {
+                Console.Write("ENTER PRODUCT CODE: ");
                 productInput = Console.ReadLine().ToUpper();
 
-            if (!serviceAccess.isProductValid(productInput))
-            {
-                Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
-
-                while (true)
+                if (!serviceAccess.isProductValid(productInput))
                 {
-                    addItem();
+                    Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
+                }
+                else
+                {
+                    break;
                 }
             }
-
             Console.Write("ENTER " + productInput + " QUANTITY : ");
             string toParseInput = Console.ReadLine();
 
@@ -118,10 +128,16 @@ namespace eCommerceCartFunc {
                     {
                         Console.WriteLine(productInput + " IS SUCCESSFULLY ADDED TO CART!");
                     }
-
                     else 
                     {
+                        if (quantityInput <= 0)
+                        {
+                            Console.WriteLine("ERROR! QUANTITY MUST BE POSITIVE.");
+                        } 
+                        else
+                        {
                         Console.WriteLine("ERROR! YOUR CART HAS REACHED ITS MAXIMUM LIMIT.");
+                        }
                         cartMenu();
                     }
                 }
@@ -133,10 +149,23 @@ namespace eCommerceCartFunc {
         }
         static void removeItem()
         {
-            Console.Write("ENTER PRODUCT CODE TO REMOVE: ");
-            productInput = Console.ReadLine().ToUpper();
+            while (true)
+            {
+                Console.Write("ENTER PRODUCT CODE TO REMOVE: ");
+                productInput = Console.ReadLine().ToUpper();
 
-            bool isInCart = serviceAccess.removeFromCart(productInput);
+                if (!serviceAccess.isProductValid(productInput))
+                {
+                    Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            bool isInCart = serviceAccess.isInCart(productInput,quantityInput);
+
 
             if (isInCart)
             {
@@ -145,6 +174,7 @@ namespace eCommerceCartFunc {
                 switch (confirmRemove)
                 {
                     case "Y":
+                        serviceAccess.removeItem(productInput);
                         Console.WriteLine(productInput + " IS SUCCESSFULLY REMOVED FROM CART!");
                         cartMenu();
                         break;
@@ -173,6 +203,7 @@ namespace eCommerceCartFunc {
             if (cartItems.Count == 0 )
             {
                 Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+                cartMenu();
             }
             else
             {

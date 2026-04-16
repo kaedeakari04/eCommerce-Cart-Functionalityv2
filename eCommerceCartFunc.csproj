@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="eCommerceCartFunc_AppService_\eCommerceCartFunc_AppService_.csproj" />
-    <ProjectReference Include="eCommerceCartFunc_Models_\eCommerceCartFunc_Models_.csproj" />
   </ItemGroup>
 
 </Project>
