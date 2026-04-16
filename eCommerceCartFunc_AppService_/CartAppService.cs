@@ -10,6 +10,7 @@ namespace eCommerceCartFunc_AppService_
     public class CartAppService
     {
         CartDataService dataService = new CartDataService(new CartDB());
+        CartInMemory productDisplay = new CartInMemory();
 
         public CartAppService()
         {
@@ -49,5 +50,19 @@ namespace eCommerceCartFunc_AppService_
         public List<Product> viewMyCart()
         {
             return dataService.viewCart();
-        }  
+        }
+
+        public List<Product> getFashionProducts()
+        {
+            return productDisplay.fashionProducts();
+        }
+        public List<Product> getElectronicProducts()
+        {
+            return productDisplay.electronicProducts();
+        }
+        public List<Product> getGroceryProducts()
+        {
+            return productDisplay.groceryProducts();
+        }
+    
 }}

@@ -1,7 +1,5 @@
 ﻿using System;
 using eCommerceCartFunc_AppService_;
-using eCommerceCartFunc_DataService_;
-using eCommerceCartFunc_Models_;
 
 namespace eCommerceCartFunc {
     internal class Program
@@ -49,8 +47,6 @@ namespace eCommerceCartFunc {
         static void Main(string[] args)
         {
             productDisplay();
-           
-
             while (true)
             {
                 cartMenu();
@@ -195,11 +191,9 @@ namespace eCommerceCartFunc {
 
         static void productDisplay()
         {
-            CartInMemory toDisplay = new CartInMemory();
-            toDisplay.ProductMenu();
-            var fashionProducts = toDisplay.fashionProducts;
-            var electronicProducts = toDisplay.electronicProducts;
-            var groceryProducts = toDisplay.groceryProducts;
+            var fashionProducts = serviceAccess.getFashionProducts();
+            var electronicProducts = serviceAccess.getElectronicProducts();
+            var groceryProducts = serviceAccess.getGroceryProducts();
 
             string productMenu = """
                                 ===============================
