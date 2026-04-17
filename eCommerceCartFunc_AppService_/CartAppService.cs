@@ -20,17 +20,22 @@ namespace eCommerceCartFunc_AppService_
             {
                 return false;
             }
-            if (newProductQuanti >= dataService.maxCartCount)
+            if (newProductQuanti > dataService.maxCartCount)
             {
                 return false;
             }
-            if ((cartCapacity != null) && (cartCapacity >= dataService.maxCartCount))
+            if ((cartCapacity != null) && (cartCapacity > dataService.maxCartCount))
             {
                 return false;
             }
  
             isProductExist(newProductCode, newProductQuanti);
             return true;
+        }
+
+        public string GetProductName(string newProductCode)
+        {
+            return dataService.GetProductName(newProductCode);
         }
 
         public bool isProductValid(string newProductCode)

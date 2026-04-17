@@ -72,6 +72,20 @@ namespace eCommerceCartFunc_DataService_
             return product != null;
 
         }
+        public string GetProductName(string productInCode)
+        {
+            var getProdNameStmt = "SELECT [Product Name] " +
+                              "FROM ProductsCatalog_TB " +
+                              "WHERE [Product Code] = @ProductCode";
+            using var getProdNameCmd = new SqlCommand(getProdNameStmt, sqlToConnect);
+            getProdNameCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+
+            sqlToConnect.Open();
+            object showProductName = getProdNameCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            return Convert.ToString(showProductName) ?? string.Empty;
+        }
 
         public int? GetCartCapacity()
         {
@@ -118,7 +132,10 @@ namespace eCommerceCartFunc_DataService_
         public List<Product> viewCart()
         {
             var products = new List<Product>();
-            var selectStmt = "SELECT [Product Code], [Product Quantity] FROM CartFunc_TB";
+            var selectStmt = "SELECT cart.[Product Code], products.[Product Name], " +
+                             "cart.[Product Quantity], products.[Product Price], products.[Category] " +
+                             "FROM CartFunc_TB cart INNER JOIN ProductsCatalog_TB products " +
+                             "ON cart.[Product Code] = products.[Product Code]";
 
             using var selectCmd = new SqlCommand(selectStmt, sqlToConnect);
             sqlToConnect.Open();
@@ -129,9 +146,11 @@ namespace eCommerceCartFunc_DataService_
                 var product = new Product
                 {
                     ProductCode = toRead["Product Code"].ToString(),
-                    ProductQuantity = Convert.ToInt32(toRead["Product Quantity"])
+                    ProductName = toRead["Product Name"].ToString(),
+                    ProductQuantity = Convert.ToInt32(toRead["Product Quantity"]),
+                    ProductPrice = Convert.ToInt32(toRead["Product Price"]),
+                    Category = toRead["Category"].ToString(),
                 };
-
                 products.Add(product);
             }
             sqlToConnect.Close();

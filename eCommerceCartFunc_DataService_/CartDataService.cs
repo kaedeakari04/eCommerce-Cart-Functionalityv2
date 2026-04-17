@@ -21,6 +21,10 @@ namespace eCommerceCartFunc_DataService_
         {
             return dataService.isProductValid(productInCode);
         }
+        public string GetProductName(string productInCode)
+        {
+            return dataService.GetProductName(productInCode);
+        }
         public int? GetCartCapacity()
         {
             return dataService.GetCartCapacity();

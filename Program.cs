@@ -48,10 +48,14 @@ namespace eCommerceCartFunc {
         //UPDATE | 04.17
         // > polished, cleaned layer codes and removed unused usings
         // > started adding Clear Cart Feature
+        // > edited view cart (wherein, product name, price and category will also be shown)
+        // > removeItem and addItem has been edited as well (wherein, product name will be outputted instead of product name)  |  created new method to getProductName
 
         static CartAppService serviceAccess = new CartAppService();
+        //static string ProductName = serviceAccess.GetProductName(productInput);
         static string productInput;
         static int quantityInput;
+
 
         static void Main(string[] args)
         {
@@ -105,14 +109,14 @@ namespace eCommerceCartFunc {
 
                 if (!serviceAccess.isProductValid(productInput))
                 {
-                    Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
+                    Console.WriteLine($"ERROR! {productInput} IS NOT A VALID PRODUCT CODE.");
                     continue;
                 }
                 break;
             }
             while (true)
             {
-                Console.Write("ENTER " + productInput + " QUANTITY : ");
+                Console.Write("ENTER QUANTITY : ");
                 string toParseInput = Console.ReadLine();
 
                 if (!int.TryParse(toParseInput, out quantityInput))
@@ -130,12 +134,14 @@ namespace eCommerceCartFunc {
             }
             else
             {
-                Console.WriteLine(productInput + " IS SUCCESSFULLY ADDED TO CART!");
+                string ProductName = serviceAccess.GetProductName(productInput);
+                Console.WriteLine($"{ProductName} IS SUCCESSFULLY ADDED TO CART!");
             }
         }
 
         static void removeItem()
         {
+            string ProductName = serviceAccess.GetProductName(productInput);
             while (true)
             {
                 Console.Write("ENTER PRODUCT CODE TO REMOVE: ");
@@ -148,19 +154,19 @@ namespace eCommerceCartFunc {
                 }
                 if (!serviceAccess.isInCart(productInput, quantityInput))
                 {
-                    Console.WriteLine("ERROR! " + productInput + " IS NOT ON YOUR CART.");
+                    Console.WriteLine($"ERROR! {ProductName} IS NOT ON YOUR CART.");
                     continue;
                 }
                 break;
             }
-            Console.Write("ARE YOU SURE YOU WANT TO REMOVE " + productInput + "? [Y/N]: ");
+            Console.Write($"ARE YOU SURE YOU WANT TO REMOVE {ProductName}? [Y/N]: ");
             string confirmRemove = Console.ReadLine().ToUpper();
 
             switch (confirmRemove)
             {
                 case "Y":
                     serviceAccess.removeItem(productInput);
-                    Console.WriteLine(productInput + " IS SUCCESSFULLY REMOVED FROM CART!");
+                    Console.WriteLine( $"{ProductName} IS SUCCESSFULLY REMOVED FROM CART!");
                     break;
                 case "N":
                     Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
@@ -177,7 +183,7 @@ namespace eCommerceCartFunc {
                                 ===================
                                 MY CART
                                 ===================
-                                PRODUCT NAME  |  QUANTITY
+                                PRODUCT CODE  |            PRODUCT NAME           | QUANTITY |      PRICE      |  CATEGORY
                                 """;
             Console.WriteLine(toPrintView);
             var cartItems = serviceAccess.viewMyCart();
@@ -186,7 +192,7 @@ namespace eCommerceCartFunc {
             {
                 foreach (var item in cartItems)
                 {
-                    Console.WriteLine($"[ {item.ProductCode} ]     x {item.ProductQuantity}");
+                    Console.WriteLine($"[{item.ProductCode}]          {item.ProductName}        {item.ProductQuantity}        {item.ProductPrice}           {item.Category}");
                 }
             }
             else
