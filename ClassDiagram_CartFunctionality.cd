@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="eCommerceCartFunc.Program">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAFBACAAAAIAAAAAAgAAAAAJAAAQAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="eCommerceCartFunc_AppService_.CartAppService">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="eCommerceCartFunc_DataService_.cart_JSON_Data">
+    <Position X="8.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="eCommerceCartFunc_DataService_.CartDataService">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="eCommerceCartFunc_DataService_.CartDB" BaseTypeListCollapsed="true">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="eCommerceCartFunc_DataService_.CartInMemory">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="eCommerceCartFunc_Models_.Product">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="eCommerceCartFunc_DataService_.ICartDataService">
+    <Position X="5.75" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

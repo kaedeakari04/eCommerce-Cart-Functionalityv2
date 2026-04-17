@@ -29,6 +29,10 @@ namespace eCommerceCartFunc_DataService_
         {
             return dataService.GetCartCapacity();
         }
+        public double? GetTotalPrice()
+        {
+            return dataService.GetTotalPrice();
+        }
         public void updateQuantity(string productInCode, int productInQuanti)
         {
             dataService.updateQuantity(productInCode, productInQuanti);
@@ -37,12 +41,18 @@ namespace eCommerceCartFunc_DataService_
         {
             dataService.AddItem(productInCode, productInQuanti);
         }
-
         public void RemoveItem(string productIncode)
         {
             dataService.RemoveItem(productIncode);
         }
-
+        public bool cartHasItems()
+        {
+            return dataService.cartHasItems();
+        }
+        public bool clearCart()
+        {
+            return dataService.clearCart();
+        }
         public List<Product> viewCart()
         {
             return dataService.viewCart();

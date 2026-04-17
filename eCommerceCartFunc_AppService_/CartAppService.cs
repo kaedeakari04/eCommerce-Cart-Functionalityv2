@@ -32,7 +32,10 @@ namespace eCommerceCartFunc_AppService_
             isProductExist(newProductCode, newProductQuanti);
             return true;
         }
-
+        public double? GetTotalPrice()
+        {
+            return dataService.GetTotalPrice();
+        }
         public string GetProductName(string newProductCode)
         {
             return dataService.GetProductName(newProductCode);
@@ -42,7 +45,9 @@ namespace eCommerceCartFunc_AppService_
         {
             return dataService.isProductValid(newProductCode);
         }
-        public bool isProductExist(string newProductCode, int newProductQuantity)
+        /* |  this is for to either add the item if not in cart or update quantity instead
+           v  */
+        public bool isProductExist(string newProductCode, int newProductQuantity) 
         {
             if (dataService.isProductExist(newProductCode, newProductQuantity))
             {
@@ -54,14 +59,34 @@ namespace eCommerceCartFunc_AppService_
             }
             return true;
         }
-
-        public bool isInCart(string newProductCode, int newProductQuantity)
+        public bool validateRemove(string newProductCode, int newProductQuantity)
         {
-            return dataService.isProductExist(newProductCode, newProductQuantity);
+            if(!dataService.isProductValid(newProductCode))
+            {
+                return false;
+            }
+            
+            if (!dataService.isProductExist(newProductCode, newProductQuantity))
+            {
+                return false;
+            }
+            return true;
         }
         public void removeItem(string newProductCode)
         {
             dataService.RemoveItem(newProductCode);
+        }
+        public bool cartHasItems()
+        {
+            return dataService.cartHasItems();
+        }
+        public bool clearCart()
+        {
+            if (!cartHasItems())
+            {
+                return false;
+            }
+            return dataService.clearCart();
         }
         public List<Product> viewMyCart()
         {

@@ -50,13 +50,13 @@ namespace eCommerceCartFunc {
         // > started adding Clear Cart Feature
         // > edited view cart (wherein, product name, price and category will also be shown)
         // > removeItem and addItem has been edited as well (wherein, product name will be outputted instead of product name)  |  created new method to getProductName
+        // > added total price in view cart
+        // > completed Clear Cart Feature
 
         static CartAppService serviceAccess = new CartAppService();
-        //static string ProductName = serviceAccess.GetProductName(productInput);
+        static bool cartHasItems = serviceAccess.cartHasItems();
         static string productInput;
         static int quantityInput;
-
-
         static void Main(string[] args)
         {
             productDisplay();
@@ -141,71 +141,98 @@ namespace eCommerceCartFunc {
 
         static void removeItem()
         {
-            string ProductName = serviceAccess.GetProductName(productInput);
-            while (true)
+            if (cartHasItems)
             {
-                Console.Write("ENTER PRODUCT CODE TO REMOVE: ");
-                productInput = Console.ReadLine().ToUpper();
-
-                if (!serviceAccess.isProductValid(productInput))
+                while (true)
                 {
-                    Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
-                    continue;
+                    Console.Write("ENTER PRODUCT CODE TO REMOVE: ");
+                    productInput = Console.ReadLine().ToUpper();
+
+                    if (!serviceAccess.validateRemove(productInput, quantityInput))
+                    {
+                        Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE OR NOT IN CART.");
+                        continue;
+                    }
+                    break;
                 }
-                if (!serviceAccess.isInCart(productInput, quantityInput))
+                string ProductName = serviceAccess.GetProductName(productInput);
+                Console.Write($"ARE YOU SURE YOU WANT TO REMOVE {ProductName}? [Y/N]: ");
+                string confirmRemove = Console.ReadLine().ToUpper();
+
+                switch (confirmRemove)
                 {
-                    Console.WriteLine($"ERROR! {ProductName} IS NOT ON YOUR CART.");
-                    continue;
-                }
-                break;
-            }
-            Console.Write($"ARE YOU SURE YOU WANT TO REMOVE {ProductName}? [Y/N]: ");
-            string confirmRemove = Console.ReadLine().ToUpper();
-
-            switch (confirmRemove)
-            {
-                case "Y":
-                    serviceAccess.removeItem(productInput);
-                    Console.WriteLine( $"{ProductName} IS SUCCESSFULLY REMOVED FROM CART!");
-                    break;
-                case "N":
-                    Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
-                    break;
-                default:
-                    Console.WriteLine("INVALID INPUT. Y or N only.");
-                    break;
-            }
-        }
-
-        static void viewCart()
-        {
-            string toPrintView = """
-                                ===================
-                                MY CART
-                                ===================
-                                PRODUCT CODE  |            PRODUCT NAME           | QUANTITY |      PRICE      |  CATEGORY
-                                """;
-            Console.WriteLine(toPrintView);
-            var cartItems = serviceAccess.viewMyCart();
-
-            if (cartItems.Count != 0 )
-            {
-                foreach (var item in cartItems)
-                {
-                    Console.WriteLine($"[{item.ProductCode}]          {item.ProductName}        {item.ProductQuantity}        {item.ProductPrice}           {item.Category}");
+                    case "Y":
+                        serviceAccess.removeItem(productInput);
+                        Console.WriteLine($"{ProductName} IS SUCCESSFULLY REMOVED FROM CART!");
+                        break;
+                    case "N":
+                        Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
+                        break;
+                    default:
+                        Console.WriteLine("INVALID INPUT. Y or N only.");
+                        break;
                 }
             }
             else
             {
                 Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
             }
+           
         }
-
         static void clearCart()
         {
-            Console.WriteLine("UNDER DEVELOPMENT");
-        }
+            if (cartHasItems)
+            {
+                Console.Write($"ARE YOU SURE YOU WANT TO CLEAR YOUR CART? [Y/N]: ");
+                string confirmRemove = Console.ReadLine().ToUpper();
 
+                switch (confirmRemove)
+                {
+                    case "Y":
+                        serviceAccess.clearCart();
+                        Console.WriteLine("YOUR CART HAS BEEN SUCCESSFULLY CLEARED!");
+                        break;
+                    case "N":
+                        Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
+                        break;
+                    default:
+                        Console.WriteLine("INVALID INPUT. Y or N only.");
+                        break;
+                }    
+            }
+            else
+            {
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+            }
+        }
+        static void viewCart()
+        {
+            var cartItems = serviceAccess.viewMyCart();
+            double? totalPrice = serviceAccess.GetTotalPrice();
+
+            if (cartItems.Count != 0 )
+            {
+                string toPrintView = """
+                                ===================
+                                MY CART
+                                ===================
+                                PRODUCT CODE  |            PRODUCT NAME           | QUANTITY |      PRICE      |  CATEGORY
+                                """;
+                Console.WriteLine(toPrintView);
+                foreach (var item in cartItems)
+                {
+                    Console.WriteLine($"[{item.ProductCode}]\t{item.ProductName}\t{item.ProductQuantity}\tPHP{item.ProductPrice}\t{item.Category}");
+                }
+                Console.WriteLine($"""
+                                  ====================================================
+                                  TOTAL     |   PHP{totalPrice}          
+                                  """);
+            }
+            else
+            {
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+            }
+        }
         static void productDisplay()
         {
             var fashionProducts = serviceAccess.getFashionProducts();

@@ -29,21 +29,6 @@ namespace eCommerceCartFunc_DataService_
 
             return IsProductExist>0;
         }
-
-        public void updateQuantity (string productInCode, int productInQuanti)
-        {
-            var updateQuantiStmt = "UPDATE CartFunc_TB " +
-                                       "SET [Product Quantity] = [Product Quantity] + @ProductQuantity " +
-                                       "WHERE [Product Code] = @ProductCode";
-            using var updateQuantiCmd = new SqlCommand(updateQuantiStmt, sqlToConnect);
-
-            updateQuantiCmd.Parameters.AddWithValue("@ProductCode", productInCode);
-            updateQuantiCmd.Parameters.AddWithValue("@ProductQuantity", productInQuanti);
-
-            sqlToConnect.Open();
-            updateQuantiCmd.ExecuteNonQuery();
-            sqlToConnect.Close();
-        }
         public bool isProductValid(string productInCode)
         {
             var isValidStmt = "SELECT [Product Code], [Product Name], [Product Price], [Category] " +
@@ -89,7 +74,8 @@ namespace eCommerceCartFunc_DataService_
 
         public int? GetCartCapacity()
         {
-            var checkStmt = "SELECT SUM([Product Quantity]) FROM CartFunc_TB";
+            var checkStmt = "SELECT SUM([Product Quantity]) " +
+                            "FROM CartFunc_TB";
             using var checkCmd = new SqlCommand(checkStmt, sqlToConnect);
             
             sqlToConnect.Open();
@@ -102,6 +88,25 @@ namespace eCommerceCartFunc_DataService_
             }
 
             return Convert.ToInt32(totalQuantity);
+        }
+
+        public double? GetTotalPrice()
+        {
+            var totalPriceStmt = "SELECT SUM(products.[Product Price] * cart.[Product Quantity]) AS viewTotalCart " +
+                                 "FROM CartFunc_TB cart INNER JOIN ProductsCatalog_TB products " +
+                                 "ON cart.[Product Code] = products.[Product Code]";
+            using var totalPriceCmd = new SqlCommand(totalPriceStmt, sqlToConnect);
+
+            sqlToConnect.Open();
+            object totalPrice = totalPriceCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            if (totalPrice == DBNull.Value)
+            {
+                return null;
+            }
+
+            return Convert.ToDouble(totalPrice);
         }
 
         public void AddItem(string productInCode, int productInQuanti)
@@ -127,6 +132,43 @@ namespace eCommerceCartFunc_DataService_
 
             sqlToConnect.Open();
             deleteCmd.ExecuteNonQuery();
+            sqlToConnect.Close();
+        }
+        public bool cartHasItems()
+        {
+            var hasItemsStmt = "SELECT COUNT(*) FROM CartFunc_TB";
+            using var hasItemsCmd = new SqlCommand(hasItemsStmt, sqlToConnect);
+
+            sqlToConnect.Open();
+            int hasItems = Convert.ToInt32(hasItemsCmd.ExecuteScalar());
+            sqlToConnect.Close();
+
+            return hasItems > 0;
+        }
+        public bool clearCart()
+        {
+            var clearStmt = "DELETE FROM CartFunc_TB";
+            using var clearCmd = new SqlCommand(clearStmt, sqlToConnect);
+
+            sqlToConnect.Open();
+            clearCmd.ExecuteNonQuery();
+            sqlToConnect.Close();
+
+            return true;
+        }
+
+        public void updateQuantity(string productInCode, int productInQuanti)
+        {
+            var updateQuantiStmt = "UPDATE CartFunc_TB " +
+                                   "SET [Product Quantity] = [Product Quantity] + @ProductQuantity " +
+                                   "WHERE [Product Code] = @ProductCode";
+            using var updateQuantiCmd = new SqlCommand(updateQuantiStmt, sqlToConnect);
+
+            updateQuantiCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+            updateQuantiCmd.Parameters.AddWithValue("@ProductQuantity", productInQuanti);
+
+            sqlToConnect.Open();
+            updateQuantiCmd.ExecuteNonQuery();
             sqlToConnect.Close();
         }
         public List<Product> viewCart()
