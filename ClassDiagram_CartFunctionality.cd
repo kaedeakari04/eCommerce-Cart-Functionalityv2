@@ -20,7 +20,7 @@
     <TypeIdentifier />
   </Class>
   <Class Name="eCommerceCartFunc_DataService_.CartDB" BaseTypeListCollapsed="true">
-    <Position X="4" Y="4" Width="1.5" />
+    <Position X="4" Y="4.5" Width="1.5" />
     <TypeIdentifier />
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>

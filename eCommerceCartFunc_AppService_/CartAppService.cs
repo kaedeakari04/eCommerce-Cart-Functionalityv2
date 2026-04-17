@@ -13,25 +13,6 @@ namespace eCommerceCartFunc_AppService_
         {
             cart_JSON_Data cartJson = new cart_JSON_Data();
         }
-        public bool addToCart(string newProductCode, int newProductQuanti)
-        {
-            int? cartCapacity = dataService.GetCartCapacity();
-            if (newProductQuanti <= 0)
-            {
-                return false;
-            }
-            if (newProductQuanti > dataService.maxCartCount)
-            {
-                return false;
-            }
-            if ((cartCapacity != null) && (cartCapacity > dataService.maxCartCount))
-            {
-                return false;
-            }
- 
-            isProductExist(newProductCode, newProductQuanti);
-            return true;
-        }
         public double? GetTotalPrice()
         {
             return dataService.GetTotalPrice();
@@ -40,7 +21,6 @@ namespace eCommerceCartFunc_AppService_
         {
             return dataService.GetProductName(newProductCode);
         }
-
         public bool isProductValid(string newProductCode)
         {
             return dataService.isProductValid(newProductCode);
@@ -57,6 +37,25 @@ namespace eCommerceCartFunc_AppService_
             {
                 dataService.AddItem(newProductCode, newProductQuantity);
             }
+            return true;
+        }
+        public bool addToCart(string newProductCode, int newProductQuanti)
+        {
+            int? cartCapacity = dataService.GetCartCapacity();
+            if (newProductQuanti <= 0)
+            {
+                return false;
+            }
+            if (newProductQuanti > dataService.maxCartCount)
+            {
+                return false;
+            }
+            if ((cartCapacity != null) && (cartCapacity >= dataService.maxCartCount))
+            {
+                return false;
+            }
+
+            isProductExist(newProductCode, newProductQuanti);
             return true;
         }
         public bool validateRemove(string newProductCode, int newProductQuantity)
@@ -92,7 +91,6 @@ namespace eCommerceCartFunc_AppService_
         {
             return dataService.viewCart();
         }
-
         public List<Product> getFashionProducts()
         {
             return productDisplay.fashionProducts();

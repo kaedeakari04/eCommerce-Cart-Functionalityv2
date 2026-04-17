@@ -16,6 +16,55 @@ namespace eCommerceCartFunc_DataService_
             sqlToConnect = new SqlConnection(connectString);
 
         }
+        public string GetProductName(string productInCode)
+        {
+            var getProdNameStmt = "SELECT [Product Name] " +
+                              "FROM ProductsCatalog_TB " +
+                              "WHERE [Product Code] = @ProductCode";
+            using var getProdNameCmd = new SqlCommand(getProdNameStmt, sqlToConnect);
+            getProdNameCmd.Parameters.AddWithValue("@ProductCode", productInCode);
+
+            sqlToConnect.Open();
+            object showProductName = getProdNameCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            return Convert.ToString(showProductName) ?? string.Empty;
+        }
+        public int? GetCartCapacity()
+        {
+            var checkStmt = "SELECT SUM([Product Quantity]) " +
+                            "FROM CartFunc_TB";
+            using var checkCmd = new SqlCommand(checkStmt, sqlToConnect);
+
+            sqlToConnect.Open();
+            object totalQuantity = checkCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            if (totalQuantity == DBNull.Value)
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(totalQuantity);
+        }
+        public double? GetTotalPrice()
+        {
+            var totalPriceStmt = "SELECT SUM(products.[Product Price] * cart.[Product Quantity]) AS viewTotalCart " +
+                                 "FROM CartFunc_TB cart INNER JOIN ProductsCatalog_TB products " +
+                                 "ON cart.[Product Code] = products.[Product Code]";
+            using var totalPriceCmd = new SqlCommand(totalPriceStmt, sqlToConnect);
+
+            sqlToConnect.Open();
+            object totalPrice = totalPriceCmd.ExecuteScalar();
+            sqlToConnect.Close();
+
+            if (totalPrice == DBNull.Value)
+            {
+                return null;
+            }
+
+            return Convert.ToDouble(totalPrice);
+        }
         public bool isProductExist(string productInCode, int productInQuanti)
         {
             var isExistStmt = "SELECT COUNT(*) FROM CartFunc_TB " +
@@ -57,58 +106,6 @@ namespace eCommerceCartFunc_DataService_
             return product != null;
 
         }
-        public string GetProductName(string productInCode)
-        {
-            var getProdNameStmt = "SELECT [Product Name] " +
-                              "FROM ProductsCatalog_TB " +
-                              "WHERE [Product Code] = @ProductCode";
-            using var getProdNameCmd = new SqlCommand(getProdNameStmt, sqlToConnect);
-            getProdNameCmd.Parameters.AddWithValue("@ProductCode", productInCode);
-
-            sqlToConnect.Open();
-            object showProductName = getProdNameCmd.ExecuteScalar();
-            sqlToConnect.Close();
-
-            return Convert.ToString(showProductName) ?? string.Empty;
-        }
-
-        public int? GetCartCapacity()
-        {
-            var checkStmt = "SELECT SUM([Product Quantity]) " +
-                            "FROM CartFunc_TB";
-            using var checkCmd = new SqlCommand(checkStmt, sqlToConnect);
-            
-            sqlToConnect.Open();
-            object totalQuantity = checkCmd.ExecuteScalar();
-            sqlToConnect.Close();
-
-            if (totalQuantity == DBNull.Value)
-            {
-                return null;
-            }
-
-            return Convert.ToInt32(totalQuantity);
-        }
-
-        public double? GetTotalPrice()
-        {
-            var totalPriceStmt = "SELECT SUM(products.[Product Price] * cart.[Product Quantity]) AS viewTotalCart " +
-                                 "FROM CartFunc_TB cart INNER JOIN ProductsCatalog_TB products " +
-                                 "ON cart.[Product Code] = products.[Product Code]";
-            using var totalPriceCmd = new SqlCommand(totalPriceStmt, sqlToConnect);
-
-            sqlToConnect.Open();
-            object totalPrice = totalPriceCmd.ExecuteScalar();
-            sqlToConnect.Close();
-
-            if (totalPrice == DBNull.Value)
-            {
-                return null;
-            }
-
-            return Convert.ToDouble(totalPrice);
-        }
-
         public void AddItem(string productInCode, int productInQuanti)
         {
             var insertStmt = "INSERT INTO CartFunc_TB ([Product Code], [Product Quantity]) " +
@@ -122,7 +119,6 @@ namespace eCommerceCartFunc_DataService_
             insertCmd.ExecuteNonQuery();
             sqlToConnect.Close();
         }
-
         public void RemoveItem(string productIncode)
         {
             var deleteStmt = "DELETE FROM CartFunc_TB " +
@@ -156,7 +152,6 @@ namespace eCommerceCartFunc_DataService_
 
             return true;
         }
-
         public void updateQuantity(string productInCode, int productInQuanti)
         {
             var updateQuantiStmt = "UPDATE CartFunc_TB " +

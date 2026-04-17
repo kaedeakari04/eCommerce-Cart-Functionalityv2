@@ -52,9 +52,15 @@ namespace eCommerceCartFunc {
         // > removeItem and addItem has been edited as well (wherein, product name will be outputted instead of product name)  |  created new method to getProductName
         // > added total price in view cart
         // > completed Clear Cart Feature
+        // > added class diagram
+        //--------------------
+        //UPDATE | 04.18
+        // > fixed logic in removeItem and clearCart 
+        // > added product price in productDisplay
+        // > final code cleanup check
+        // > FINAL REMARKS: JSON File class and InMemory remains not updated and not in-used, used cartDB for all input storage -> except display of products
 
         static CartAppService serviceAccess = new CartAppService();
-        static bool cartHasItems = serviceAccess.cartHasItems();
         static string productInput;
         static int quantityInput;
         static void Main(string[] args)
@@ -141,7 +147,12 @@ namespace eCommerceCartFunc {
 
         static void removeItem()
         {
-            if (cartHasItems)
+            bool cartHasItems = serviceAccess.cartHasItems();
+            if (!cartHasItems)
+            {
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+            }
+            else
             {
                 while (true)
                 {
@@ -173,15 +184,15 @@ namespace eCommerceCartFunc {
                         break;
                 }
             }
-            else
-            {
-                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
-            }
-           
         }
         static void clearCart()
         {
-            if (cartHasItems)
+            bool cartHasItems = serviceAccess.cartHasItems();
+            if (!cartHasItems)
+            {
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+            }
+            else
             {
                 Console.Write($"ARE YOU SURE YOU WANT TO CLEAR YOUR CART? [Y/N]: ");
                 string confirmRemove = Console.ReadLine().ToUpper();
@@ -198,12 +209,8 @@ namespace eCommerceCartFunc {
                     default:
                         Console.WriteLine("INVALID INPUT. Y or N only.");
                         break;
-                }    
-            }
-            else
-            {
-                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
-            }
+                }
+            }   
         }
         static void viewCart()
         {
@@ -221,11 +228,11 @@ namespace eCommerceCartFunc {
                 Console.WriteLine(toPrintView);
                 foreach (var item in cartItems)
                 {
-                    Console.WriteLine($"[{item.ProductCode}]\t{item.ProductName}\t{item.ProductQuantity}\tPHP{item.ProductPrice}\t{item.Category}");
+                    Console.WriteLine($"{item.ProductCode,-15} {item.ProductName,-38} {item.ProductQuantity,-10} PHP{item.ProductPrice,-10} {item.Category,-8}");
                 }
                 Console.WriteLine($"""
                                   ====================================================
-                                  TOTAL     |   PHP{totalPrice}          
+                                  TOTAL         |   PHP{totalPrice}          
                                   """);
             }
             else
@@ -255,7 +262,7 @@ namespace eCommerceCartFunc {
                             """);
             foreach (var item in fashionProducts)
             {
-                Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");
+                Console.WriteLine($"{item.ProductCode,-12}  | {item.ProductName,-40} | {item.ProductPrice,-10}");
             }
 
             Console.WriteLine("""
@@ -264,7 +271,7 @@ namespace eCommerceCartFunc {
                             """);
             foreach (var item in electronicProducts)
             {
-                Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");
+                Console.WriteLine($"{item.ProductCode,-12}  | {item.ProductName,-40} | {item.ProductPrice,-10}");
             }
 
             Console.WriteLine("""
@@ -273,7 +280,7 @@ namespace eCommerceCartFunc {
                             """);
             foreach (var item in groceryProducts)
             {
-                Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");
+                Console.WriteLine($"{item.ProductCode,-12}  | {item.ProductName,-40} | {item.ProductPrice,-10}");
             }
         }
 }}

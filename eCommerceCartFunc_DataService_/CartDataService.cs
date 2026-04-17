@@ -13,14 +13,6 @@ namespace eCommerceCartFunc_DataService_
         {
             dataService = cartDataService;
         }
-        public bool isProductExist(string productInCode, int productInQuanti)
-        {
-            return dataService.isProductExist(productInCode, productInQuanti);
-        }
-        public bool isProductValid(string productInCode)
-        {
-            return dataService.isProductValid(productInCode);
-        }
         public string GetProductName(string productInCode)
         {
             return dataService.GetProductName(productInCode);
@@ -32,6 +24,14 @@ namespace eCommerceCartFunc_DataService_
         public double? GetTotalPrice()
         {
             return dataService.GetTotalPrice();
+        }
+        public bool isProductExist(string productInCode, int productInQuanti)
+        {
+            return dataService.isProductExist(productInCode, productInQuanti);
+        }
+        public bool isProductValid(string productInCode)
+        {
+            return dataService.isProductValid(productInCode);
         }
         public void updateQuantity(string productInCode, int productInQuanti)
         {
