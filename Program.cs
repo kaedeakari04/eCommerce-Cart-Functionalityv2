@@ -1,8 +1,4 @@
 ﻿using eCommerceCartFunc_AppService_;
-using System;
-using System.Collections;
-using System.Dynamic;
-using System.Reflection;
 
 namespace eCommerceCartFunc {
     internal class Program
@@ -48,6 +44,10 @@ namespace eCommerceCartFunc {
         // > added new validation for accepting quantity and incrementing quantity if item already exists in DB table
         // > added remove specific item function | validations: [1] checks if valid product [2] checks if in cart
         // > added "confirm remove" feature in removeItem
+        //--------------------
+        //UPDATE | 04.17
+        // > polished, cleaned layer codes and removed unused usings
+        // > started adding Clear Cart Feature
 
         static CartAppService serviceAccess = new CartAppService();
         static string productInput;
@@ -61,41 +61,38 @@ namespace eCommerceCartFunc {
                 cartMenu();
             }
         }
-
         static void cartMenu()
         {
-            string userInput;
-            string menuToPrint = """
+            string userInput,
+            menuToPrint = """
  
-                                ===============================
-                                -- SELECT A COMMAND --
-                                A | Add Item
-                                B | Remove Item
-                                C | View Cart
-                                X | EXIT PROGRAM
-                                """;
+                            ===============================
+                            -- SELECT A COMMAND --
+                            A | Add Item
+                            B | Remove Item
+                            C | Clear Cart
+                            D | View Cart
+                            X | EXIT PROGRAM
+                            ===============================
+                            ENTER A COMMAND: 
+                            """;
 
-            Console.WriteLine(menuToPrint);
-            Console.Write("===============================\nENTER A COMMAND: ");
-                userInput = Console.ReadLine().ToUpper();
+            Console.Write(menuToPrint);
+            userInput = Console.ReadLine().ToUpper();
             Console.WriteLine();
+
             switch (userInput)
             {
-                case "A":
-                    addItem();
-                    break;
-                case "B":
-                    removeItem();
-                    break;
-                case "C":
-                    viewCart();
-                    break;
+                case "A": addItem(); break;
+                case "B": removeItem(); break;
+                case "C": clearCart(); break;
+                case "D": viewCart(); break;
                 case "X":
-                    exitProgram();
+                    Console.WriteLine("THANK YOU! EXITING PROGRAM...");
+                    Environment.Exit(0);
                     break;
                 default:
-                    Console.WriteLine("INVALID COMMAND. SYSTEM WILL EXIT...");
-                    Environment.Exit(0);
+                    Console.WriteLine("INVALID COMMAND. PLEASE ENTER ONE OF THE LISTED OPTIONS.");
                     break;
             }
         }
@@ -109,44 +106,34 @@ namespace eCommerceCartFunc {
                 if (!serviceAccess.isProductValid(productInput))
                 {
                     Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
+                    continue;
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
-            Console.Write("ENTER " + productInput + " QUANTITY : ");
-            string toParseInput = Console.ReadLine();
-
-            bool isParsed = int.TryParse(toParseInput, out quantityInput);
-
-            if (isParsed) 
+            while (true)
             {
-                    bool isSuccessful = serviceAccess.addToCart(productInput, quantityInput);
+                Console.Write("ENTER " + productInput + " QUANTITY : ");
+                string toParseInput = Console.ReadLine();
 
-                    if (isSuccessful)
-                    {
-                        Console.WriteLine(productInput + " IS SUCCESSFULLY ADDED TO CART!");
-                    }
-                    else 
-                    {
-                        if (quantityInput <= 0)
-                        {
-                            Console.WriteLine("ERROR! QUANTITY MUST BE POSITIVE.");
-                        } 
-                        else
-                        {
-                        Console.WriteLine("ERROR! YOUR CART HAS REACHED ITS MAXIMUM LIMIT.");
-                        }
-                        cartMenu();
-                    }
+                if (!int.TryParse(toParseInput, out quantityInput))
+                {
+                    Console.WriteLine("ERROR! INVALID NUMBER.");
+                    continue;
                 }
+                break;
+            }
+            if (!serviceAccess.addToCart(productInput, quantityInput))
+            {
+                string checkQuantityInput = quantityInput <= 0 ? "ERROR! QUANTITY MUST BE POSITIVE AND GREATER THAN 0."
+                                                    : "ERROR! YOUR CART HAS REACHED ITS MAXIMUM LIMIT.";
+                Console.WriteLine(checkQuantityInput);
+            }
             else
             {
-                Console.WriteLine("ERROR! INVALID NUMBER.");
-                Environment.Exit(0);
+                Console.WriteLine(productInput + " IS SUCCESSFULLY ADDED TO CART!");
             }
         }
+
         static void removeItem()
         {
             while (true)
@@ -157,67 +144,60 @@ namespace eCommerceCartFunc {
                 if (!serviceAccess.isProductValid(productInput))
                 {
                     Console.WriteLine("ERROR! " + productInput + " IS NOT A VALID PRODUCT CODE.");
+                    continue;
                 }
-                else
+                if (!serviceAccess.isInCart(productInput, quantityInput))
                 {
+                    Console.WriteLine("ERROR! " + productInput + " IS NOT ON YOUR CART.");
+                    continue;
+                }
+                break;
+            }
+            Console.Write("ARE YOU SURE YOU WANT TO REMOVE " + productInput + "? [Y/N]: ");
+            string confirmRemove = Console.ReadLine().ToUpper();
+
+            switch (confirmRemove)
+            {
+                case "Y":
+                    serviceAccess.removeItem(productInput);
+                    Console.WriteLine(productInput + " IS SUCCESSFULLY REMOVED FROM CART!");
                     break;
-                }
-            }
-
-            bool isInCart = serviceAccess.isInCart(productInput,quantityInput);
-
-
-            if (isInCart)
-            {
-                Console.Write("ARE YOU SURE YOU WANT TO REMOVE " + productInput + "? [Y/N]: ");
-                string confirmRemove = Console.ReadLine().ToUpper();
-                switch (confirmRemove)
-                {
-                    case "Y":
-                        serviceAccess.removeItem(productInput);
-                        Console.WriteLine(productInput + " IS SUCCESSFULLY REMOVED FROM CART!");
-                        cartMenu();
-                        break;
-                    case "N":
-                        Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
-                        cartMenu();
-                        break;
-                    default:
-                        Console.WriteLine("INVALID INPUT. Y or N only.\n EXITING PROGRAM...");
-                        Environment.Exit(0);
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("ERROR! " + productInput + " IS NOT ON YOUR CART.");
+                case "N":
+                    Console.WriteLine("UNDERSTOOD. RETURNING TO MAIN MENU...");
+                    break;
+                default:
+                    Console.WriteLine("INVALID INPUT. Y or N only.");
+                    break;
             }
         }
+
         static void viewCart()
         {
-            Console.WriteLine("\n===================\nMY CART");
-            Console.WriteLine("PRODUCT NAME  |  QUANTITY");
-
+            string toPrintView = """
+                                ===================
+                                MY CART
+                                ===================
+                                PRODUCT NAME  |  QUANTITY
+                                """;
+            Console.WriteLine(toPrintView);
             var cartItems = serviceAccess.viewMyCart();
 
-            if (cartItems.Count == 0 )
+            if (cartItems.Count != 0 )
             {
-                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
-                cartMenu();
-            }
-            else
-            {
-                foreach (var item in cartItems) 
+                foreach (var item in cartItems)
                 {
                     Console.WriteLine($"[ {item.ProductCode} ]     x {item.ProductQuantity}");
                 }
             }
+            else
+            {
+                Console.WriteLine("ERROR! YOUR CART IS EMPTY!");
+            }
         }
 
-        static void exitProgram()
+        static void clearCart()
         {
-            Console.WriteLine("THANK YOU! EXITING PROGRAM...");
-            Environment.Exit(0);  
+            Console.WriteLine("UNDER DEVELOPMENT");
         }
 
         static void productDisplay()
@@ -236,19 +216,28 @@ namespace eCommerceCartFunc {
                                 """;
 
             Console.WriteLine(productMenu);
-            Console.WriteLine("FASHION\n=========");
+            Console.WriteLine("""
+                            FASHION
+                            =========
+                            """);
             foreach (var item in fashionProducts)
             {
                 Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");
             }
 
-            Console.WriteLine("\nELECTRONICS\n=========");
+            Console.WriteLine("""
+                            ELECTRONICS
+                            =========
+                            """);
             foreach (var item in electronicProducts)
             {
                 Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");
             }
 
-            Console.WriteLine("\nGROCERIES\n=========");
+            Console.WriteLine("""
+                            GROCERIES
+                            =========
+                            """);
             foreach (var item in groceryProducts)
             {
                 Console.WriteLine($"{item.ProductCode}  | {item.ProductName}");

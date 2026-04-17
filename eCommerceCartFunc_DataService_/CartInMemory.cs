@@ -7,7 +7,6 @@ namespace eCommerceCartFunc_DataService_
         public List<Product> productList = new List<Product>();
         public int maxCartCount = 2;
 
-
         public void AddItem(string productInCode, int productInQuanti)
         {
             if (productList.Count >= maxCartCount)
@@ -47,15 +46,6 @@ namespace eCommerceCartFunc_DataService_
                 new Product { ProductCode = "GR-2", ProductName = "Jack N' Jill Cloud 9 Classic Bars" }
             };
         }
-
-        //public bool removeItem(string itemToRemove)
-        //{
-        //    if ()
-        //    {
-
-        //    }
-        //    return true;
-        //}
         public List<Product> viewCart()
         {
             return productList;

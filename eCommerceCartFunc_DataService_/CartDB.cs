@@ -1,12 +1,15 @@
 ﻿using eCommerceCartFunc_Models_;
 using Microsoft.Data.SqlClient;
-using System.Xml.Serialization;
 
 namespace eCommerceCartFunc_DataService_
 {
     public class CartDB : ICartDataService
     {
-        private string connectString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=eCommerceApp_DB;Integrated Security=True;TrustServerCertificate=True";
+        private string connectString =
+            "Data Source=localhost\\SQLEXPRESS;" +
+            "Initial Catalog=eCommerceApp_DB;" +
+            "Integrated Security=True;" +
+            "TrustServerCertificate=True";
         private SqlConnection sqlToConnect;
         public CartDB()
         {
@@ -15,7 +18,6 @@ namespace eCommerceCartFunc_DataService_
         }
         public bool isProductExist(string productInCode, int productInQuanti)
         {
-            var products = new List<Product>();
             var isExistStmt = "SELECT COUNT(*) FROM CartFunc_TB " +
                               "WHERE [Product Code] = @ProductCode";
             using var isExistCmd = new SqlCommand(isExistStmt, sqlToConnect);
@@ -44,7 +46,6 @@ namespace eCommerceCartFunc_DataService_
         }
         public bool isProductValid(string productInCode)
         {
-            var products = new List<Product>();
             var isValidStmt = "SELECT [Product Code], [Product Name], [Product Price], [Category] " +
                                "FROM ProductsCatalog_TB " +
                                "WHERE [Product Code] = @ProductCode";

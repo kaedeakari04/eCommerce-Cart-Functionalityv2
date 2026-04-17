@@ -1,17 +1,14 @@
 ﻿using eCommerceCartFunc_DataService_;
 using eCommerceCartFunc_Models_;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 namespace eCommerceCartFunc_AppService_
 {
     public class CartAppService
     {
         CartDataService dataService = new CartDataService(new CartDB());
-        CartInMemory productDisplay = new CartInMemory();
+        CartInMemory productDisplay = new CartInMemory(); //added for the purpose of products display
 
+        //unused for JSON File
         public CartAppService()
         {
             cart_JSON_Data cartJson = new cart_JSON_Data();
@@ -31,7 +28,7 @@ namespace eCommerceCartFunc_AppService_
             {
                 return false;
             }
-
+ 
             isProductExist(newProductCode, newProductQuanti);
             return true;
         }
@@ -55,14 +52,7 @@ namespace eCommerceCartFunc_AppService_
 
         public bool isInCart(string newProductCode, int newProductQuantity)
         {
-            if (!dataService.isProductExist(newProductCode, newProductQuantity))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return dataService.isProductExist(newProductCode, newProductQuantity);
         }
         public void removeItem(string newProductCode)
         {
