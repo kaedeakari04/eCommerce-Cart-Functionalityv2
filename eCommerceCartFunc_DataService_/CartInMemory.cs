@@ -5,7 +5,7 @@ namespace eCommerceCartFunc_DataService_
     public class CartInMemory
     {
         public List<Product> productList = new List<Product>();
-        public int maxCartCount = 2;
+        public int maxCartCount = 99;
 
         public void AddItem(string productInCode, int productInQuanti)
         {

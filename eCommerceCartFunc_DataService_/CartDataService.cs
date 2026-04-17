@@ -7,7 +7,7 @@ namespace eCommerceCartFunc_DataService_
         ICartDataService dataService;
 
         public List<Product> productList = new List<Product>();
-        public int maxCartCount = 2;
+        public int maxCartCount = 99;
 
         public CartDataService(ICartDataService cartDataService)
         {
